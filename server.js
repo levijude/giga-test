@@ -5487,29 +5487,32 @@ let server = http.createServer((req, res) => {
       res.end()
   }
 })
-let websockets = (() => {
-    // Configure the websocketserver
-    let config = { server: server }
-        server.listen(process.env.PORT || 8080, function httpListening() {
-            util.log((new Date()) + ". Joint HTTP+Websocket server turned on, listening on port "+server.address().port + ".")
-        })
-    /*if (c.servesStatic) { 
-    } else { 
-        config.port = 8080; 
-        util.log((new Date()) + 'Websocket server turned on, listening on port ' + 8080 + '.'); 
-    }*/ 
-    // Build it
-    return new WebSocket.Server(config)
-})().on('connection', sockets.connect);  
+
+server.listen(process.env.PORT || 8080, () => {
+  util.log((new Date()) + ". Joint HTTP+Websocket server turned on, listening on port "+server.address().port + ".")
+})
+
+// --- NEW CODE BELOW ---
+
+function startWebsocketServer() {
+  if (global.websocketServer) {
+    console.log("Restarting websocket server...");
+    global.websocketServer.close();
+  }
+
+  global.websocketServer = new WebSocket.Server({ server });
+  global.websocketServer.on('connection', sockets.connect);
+}
+
+startWebsocketServer(); // initial start
+
+setInterval(startWebsocketServer, 2 * 60 * 60 * 1000); // restart every 2 hours
 
 // Bring it to life 
 setInterval(gameloop, room.cycleSpeed);
 setInterval(maintainloop, 200); 
 setInterval(speedcheckloop, 1000);
-setTimeout(()=>{
-  sockets.ambience('ambience')
-}, 1000)
-
+setTimeout(() => sockets.ambience('ambience'), 1000);
 
 
 
