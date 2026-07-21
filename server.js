@@ -5475,7 +5475,7 @@ let server = http.createServer((req, res) => {
   switch (pathname) { 
     case '/':
       res.writeHead(200)
-      res.end(`<!DOCTYPE html><h3>Arras</h3><button onclick="location.href = 'https://levijude.github.io/a409/#02'">Open</button>`)
+      res.end(`<!DOCTYPE html><h3>Arras</h3><button onclick="location.href = 'http://arras.io/#host=' + location.host">Open</button>`)
     break
     case '/mockups.json':
       res.setHeader('Access-Control-Allow-Origin', '*')
@@ -5487,11 +5487,8 @@ let server = http.createServer((req, res) => {
       res.end()
   }
 })
-
-
 let websockets = (() => {
-  function startServer() {
-     // Configure the websocketserver
+    // Configure the websocketserver
     let config = { server: server }
         server.listen(process.env.PORT || 8080, function httpListening() {
             util.log((new Date()) + ". Joint HTTP+Websocket server turned on, listening on port "+server.address().port + ".")
@@ -5503,53 +5500,15 @@ let websockets = (() => {
     }*/ 
     // Build it
     return new WebSocket.Server(config)
-  }
-
-  function stopServer(callback) {
-    if (server) {
-        console.log('Stopping WebSocket server...');
-        server.close((err) => {
-            if (err) {
-                console.error('Error closing server:', err);
-            } else {
-                console.log('WebSocket server stopped.');
-            }
-            if (callback) callback();
-        });
-    }
-}
-  function restartServer() {
-    stopServer(() => {
-        console.log('Restarting WebSocket server...');
-        startServer();
-    });
-}
-  startServer();
-  setInterval(() => {
-    restartServer();
-}, 90000);
 })().on('connection', sockets.connect);  
 
-
-
 // Bring it to life 
-
 setInterval(gameloop, room.cycleSpeed);
 setInterval(maintainloop, 200); 
 setInterval(speedcheckloop, 1000);
-
 setTimeout(()=>{
   sockets.ambience('ambience')
 }, 1000)
-
-// Function to stop the WebSocket server
-
-
-// Function to restart the WebSocket server
-
-// Example: Restart server every 30 seconds
-
- 
 
 
 
