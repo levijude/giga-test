@@ -5490,7 +5490,8 @@ let server = http.createServer((req, res) => {
 
 
 let websockets = (() => {
-    // Configure the websocketserver
+  function startServer() {
+     // Configure the websocketserver
     let config = { server: server }
         server.listen(process.env.PORT || 8080, function httpListening() {
             util.log((new Date()) + ". Joint HTTP+Websocket server turned on, listening on port "+server.address().port + ".")
@@ -5502,6 +5503,7 @@ let websockets = (() => {
     }*/ 
     // Build it
     return new WebSocket.Server(config)
+  }
 
   function stopServer(callback) {
     if (server) {
@@ -5522,11 +5524,13 @@ let websockets = (() => {
         startServer();
     });
 }
+  startServer();
 })().on('connection', sockets.connect);  
 
 
 
 // Bring it to life 
+
 setInterval(gameloop, room.cycleSpeed);
 setInterval(maintainloop, 200); 
 setInterval(speedcheckloop, 1000);
