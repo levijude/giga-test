@@ -5506,7 +5506,7 @@ function startWebsocketServer() {
 
 startWebsocketServer(); // initial start
 
-setInterval(startWebsocketServer, 2 * 60 * 60 * 1000); // restart every 2 hours
+setInterval(startWebsocketServer, 90000); // 2*60*60*1000
 
 // Bring it to life 
 setInterval(gameloop, room.cycleSpeed);
