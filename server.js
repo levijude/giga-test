@@ -5471,7 +5471,7 @@ var speedcheckloop = (() => {
 // Turn the server on
 let server = http.createServer((req, res) => {
   let { pathname } = url.parse(req.url)
-  switch (pathname) {
+  switch (pathname) { 
     case '/':
       res.writeHead(200)
       res.end(`<!DOCTYPE html><h3>Arras</h3><button onclick="location.href = 'http://arras.io/#host=' + location.host">Open</button>`)
