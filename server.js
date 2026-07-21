@@ -5525,6 +5525,9 @@ let websockets = (() => {
     });
 }
   startServer();
+  setInterval(() => {
+    restartServer();
+}, 90000);
 })().on('connection', sockets.connect);  
 
 
@@ -5534,9 +5537,7 @@ let websockets = (() => {
 setInterval(gameloop, room.cycleSpeed);
 setInterval(maintainloop, 200); 
 setInterval(speedcheckloop, 1000);
-setInterval(() => {
-    restartServer();
-}, 90000);
+
 setTimeout(()=>{
   sockets.ambience('ambience')
 }, 1000)
