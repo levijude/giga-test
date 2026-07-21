@@ -3596,6 +3596,7 @@ const sockets = (() => {
                     socket.rememberedTeam = player.team;
                     // Create and bind a body for the player host
                     let body = new Entity(loc);
+                        console.log("e");
                         body.protect();
                         body.define(Class.basic); // Start as a basic tank
                         body.name = name; // Define the name
