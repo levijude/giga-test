@@ -5513,4 +5513,37 @@ setTimeout(()=>{
 setTimeout(() => {
     util.log("Restarting server...");
     process.exit(0);
-}, 90000);
+}, 7200000);
+setTimeout(() => {
+    sockets.broadcast('[WARNING] The server will restart in 10 minutes.');
+}, 60000); //6600000
+setTimeout(() => {
+    sockets.broadcast('[WARNING] The server will restart in 5 minutes.');
+}, 6960000);
+setTimeout(() => {
+    sockets.broadcast('[WARNING] The server will restart in 1 minute.');
+}, 7140000);
+setTimeout(() => {
+    sockets.broadcast('[WARNING] The server will restart in 30 seconds.');
+}, 7170000);
+setTimeout(() => {
+    sockets.broadcast('[WARNING] The server will restart in 10 seconds.');
+}, 7190000);
+setTimeout(() => {
+    sockets.broadcast('[WARNING] The server will restart in 5 seconds.');
+}, 7195000);
+setTimeout(() => {
+    sockets.broadcast('[WARNING] The server will restart in 4 seconds.');
+}, 7196000);
+setTimeout(() => {
+    sockets.broadcast('[WARNING] The server will restart in 3 seconds.');
+}, 7197000);
+setTimeout(() => {
+    sockets.broadcast('[WARNING] The server will restart in 2 seconds.');
+}, 7198000);
+setTimeout(() => {
+    sockets.broadcast('[WARNING] The server will restart in 1 seconds.');
+}, 7199000);
+setTimeout(() => {
+    sockets.broadcast('[WARNING] The server is restarting.');
+}, 7199500);
