@@ -5516,7 +5516,7 @@ setTimeout(() => {
 }, 7200000);
 setTimeout(() => {
     sockets.broadcast('[WARNING] The server will restart in 10 minutes.');
-}, 60000); //6600000
+}, 6600000); 
 setTimeout(() => {
     sockets.broadcast('[WARNING] The server will restart in 5 minutes.');
 }, 6960000);
