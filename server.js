@@ -5468,83 +5468,49 @@ var speedcheckloop = (() => {
     };
 })();
 /** BUILD THE SERVERS **/  
-let server = null;
-let websockets = null;
+// Turn the server on
+let server = http.createServer((req, res) => {
+  let { pathname } = url.parse(req.url)
+  switch (pathname) { 
+    case '/':
+      res.writeHead(200)
+      res.end(`<!DOCTYPE html><h3>Arras</h3><button onclick="location.href = 'http://arras.io/#host=' + location.host">Open</button>`)
+    break
+    case '/mockups.json':
+      res.setHeader('Access-Control-Allow-Origin', '*')
+      res.writeHead(200)
+      res.end(mockupJsonData)
+    break
+    default:
+      res.writeHead(404)
+      res.end()
+  }
+})
 
-function startServer() {
-    // Create HTTP server
-    server = http.createServer((req, res) => {
-        let { pathname } = url.parse(req.url);
+let websockets = (() => {
+    // Configure the websocketserver
+    let config = { server: server }
+        server.listen(process.env.PORT || 8080, function httpListening() {
+            util.log((new Date()) + ". Joint HTTP+Websocket server turned on, listening on port "+server.address().port + ".")
+        })
+    /*if (c.servesStatic) { 
+    } else { 
+        config.port = 8080; 
+        util.log((new Date()) + 'Websocket server turned on, listening on port ' + 8080 + '.'); 
+    }*/ 
+    // Build it
+    return new WebSocket.Server(config)
 
-        switch (pathname) {
-            case '/':
-                res.writeHead(200);
-                res.end(`<!DOCTYPE html><h3>Arras</h3><button onclick="location.href='https://levijude.github.io/a409/#02'">Open</button>`);
-                break;
+})().on('connection', sockets.connect);  
 
-            case '/mockups.json':
-                res.setHeader('Access-Control-Allow-Origin', '*');
-                res.writeHead(200);
-                res.end(mockupJsonData);
-                break;
-
-            default:
-                res.writeHead(404);
-                res.end();
-        }
-    });
-
-    server.listen(process.env.PORT || 8080, () => {
-        util.log(`${new Date()}. Joint HTTP+WebSocket server listening on port ${server.address().port}.`);
-    });
-
-    // Create WebSocket server
-    websockets = new WebSocket.Server({ server });
-
-    websockets.on('connection', sockets.connect);
-}
-
-function restartServer() {
-    util.log(`${new Date()}. Restarting WebSocket server...`);
-
-    if (!websockets) return startServer();
-
-    // Disconnect all clients
-    websockets.clients.forEach(client => {
-        try {
-            client.close(1001, "Server restarting");
-        } catch (e) {}
-    });
-
-    // Stop accepting new websocket connections
-    websockets.close(() => {
-
-        // Close HTTP server
-        server.close(() => {
-
-            util.log(`${new Date()}. Server stopped.`);
-
-            // Start fresh
-            startServer();
-
-            util.log(`${new Date()}. Server restarted.`);
-        });
-
-    });
-}
-
-// Initial startup
-startServer();
-
-// Restart every 2 hours
-setInterval(restartServer, 90 * 1000); //2*60*60*1000
-
-// Existing game loops
+// Bring it to life 
 setInterval(gameloop, room.cycleSpeed);
-setInterval(maintainloop, 200);
+setInterval(maintainloop, 200); 
 setInterval(speedcheckloop, 1000);
 setTimeout(()=>{
   sockets.ambience('ambience')
 }, 1000)
-
-
+setTimeout(() => {
+    util.log("Restarting server...");
+    process.exit(0);
+}, 90000);
