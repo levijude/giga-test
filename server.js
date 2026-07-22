@@ -5470,7 +5470,8 @@ var speedcheckloop = (() => {
 
 /** BUILD THE SERVERS **/  
 // Turn the server on
-let server = http.createServer((req, res) => {
+function runServers() {
+  let server = http.createServer((req, res) => {
   let { pathname } = url.parse(req.url)
   switch (pathname) { 
     case '/':
@@ -5492,28 +5493,15 @@ server.listen(process.env.PORT || 8080, () => {
   util.log((new Date()) + ". Joint HTTP+Websocket server turned on, listening on port "+server.address().port + ".")
 })
 
-// --- NEW CODE BELOW ---
-
-function startWebsocketServer() {
-  if (global.websocketServer) {
-    console.log("Restarting websocket server...");
-    global.websocketServer.close();
-  }
-
-  global.websocketServer = new WebSocket.Server({ server });
-  global.websocketServer.on('connection', sockets.connect);
-}
-
-startWebsocketServer(); // initial start
-
-setInterval(startWebsocketServer, 90000); // 2*60*60*1000
-
 // Bring it to life 
 setInterval(gameloop, room.cycleSpeed);
 setInterval(maintainloop, 200); 
 setInterval(speedcheckloop, 1000);
 setTimeout(() => sockets.ambience('ambience'), 1000);
+setTimeout(server.close, 90000);
+}
 
-
+runServers();
+setInterval(runServers(), 90000);
 
 
